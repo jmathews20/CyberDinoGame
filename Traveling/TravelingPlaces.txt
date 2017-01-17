@@ -1,2 +1,4 @@
 1.Iceland
 2.Norway
+3.Bhutan
+4.New Zealand
