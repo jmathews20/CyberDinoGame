@@ -2,17 +2,18 @@
 using UnityEngine.UI;
 using System.Collections;
 
+//Draw the game character's health.
 public class HealthBar : MonoBehaviour {
 
     public DinoUI dinoUI;
     public Image healthBar;
 
     void OnEnable() {
-        dinoUI.dino.HealthChangePercentage += UpdateHealthBar;
+        dinoUI.gameCharacter.HealthChangePercentage += UpdateHealthBar;
     }
 
     void OnDisable() {
-        dinoUI.dino.HealthChangePercentage -= UpdateHealthBar;
+        dinoUI.gameCharacter.HealthChangePercentage -= UpdateHealthBar;
     }
 
     void UpdateHealthBar(float percentage) {

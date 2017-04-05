@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
+//Flashes the screen using an overlay graphic every time a Game Character gets hurt.
 public class HurtOverlay : MonoBehaviour {
 
     public DinoUI dinoUI;
@@ -20,11 +21,11 @@ public class HurtOverlay : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         overlayColor = Color.white;
-        UpdateOverlay(dinoUI.dino.CurrentHealth / dinoUI.dino.MaxHealth);
+        UpdateOverlay(dinoUI.gameCharacter.CurrentHealth / dinoUI.gameCharacter.MaxHealth);
 	}
 	
     void OnEnable() {
-        dinoUI.dino.HealthChangePercentage += UpdateOverlay;
+        dinoUI.gameCharacter.HealthChangePercentage += UpdateOverlay;
     }
 
     void UpdateOverlay(float percentage) {
