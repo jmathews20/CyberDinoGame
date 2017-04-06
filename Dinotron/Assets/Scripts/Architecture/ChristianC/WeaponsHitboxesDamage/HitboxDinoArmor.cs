@@ -2,8 +2,9 @@
 using System.Collections;
 using System;
 
+//Armor takes a certain amount of damage, then pops off of the main body once it is destroyed.
 [RequireComponent(typeof(Rigidbody))]
-public class HitboxDinoArmor : MonoBehaviour, IHitbox {
+public class HitboxDinoArmor : Hitbox {
 
     public float health = 0;
     public float maxHealth = 200;
@@ -16,8 +17,6 @@ public class HitboxDinoArmor : MonoBehaviour, IHitbox {
     private new Renderer renderer;
     private Material material;
     private Color startingColor;
-
-    public event Action<float> DamageTaken;
 
     // Use this for initialization
     void Start() {
@@ -35,17 +34,19 @@ public class HitboxDinoArmor : MonoBehaviour, IHitbox {
         startingColor = material.color;
     }
 
-    public int GetHitPriority() {
+    public override int GetHitPriority() {
         return 0;
     }
 
-    public bool CanBeHit(DamageDealer damageDealer) {
+    public override bool CanBeHit(DamageDealer damageDealer) {
         return health > 0;
     }
 
-    public void TakeDamage(float damage) {
+    protected override void ResolveDamage(DamageDealer damageDealer) {
 
-        health -= damage;
+        // Right now the armor piece only gets darker in color, but this should probably be replaced with more fancy code in the future.
+        // (Blend Shapes anyone?)
+        health -= damageDealer.damage;
         float t = (1 - (health / maxHealth)) * 0.5f;
         material.color = Color.Lerp(startingColor, Color.black, t);
 
@@ -61,10 +62,6 @@ public class HitboxDinoArmor : MonoBehaviour, IHitbox {
 
             //And poof after a while.
             StartCoroutine(Dissapear());
-        }
-
-        if (DamageTaken != null) {
-            DamageTaken(damage);
         }
     }
 

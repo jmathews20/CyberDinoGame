@@ -35,11 +35,11 @@ public class DamageDealer : MonoBehaviour {
 
 
     protected class HitboxEntry {
-        public readonly IHitbox hitbox;
+        public readonly Hitbox hitbox;
         public readonly Vector3 collisionPoint;
         public readonly float distance;
 
-        public HitboxEntry(IHitbox hitbox, Vector3 collisionPoint, float distance) {
+        public HitboxEntry(Hitbox hitbox, Vector3 collisionPoint, float distance) {
             this.hitbox = hitbox;
             this.collisionPoint = collisionPoint;
             this.distance = distance;
@@ -61,6 +61,7 @@ public class DamageDealer : MonoBehaviour {
         prevPosition = tr.position;
     }
 
+    // Pass all trigger and collision events to the OnCollide code, fetching the collision point if we can get it.
     protected void OnTriggerEnter(Collider collider) {
         OnCollide(collider);
     }
@@ -82,7 +83,7 @@ public class DamageDealer : MonoBehaviour {
     }
 
     protected void OnCollide(Collider collider, Vector3 collisionPoint, bool hasPoint = false) {
-        IHitbox hitbox = collider.GetComponent(typeof(IHitbox)) as IHitbox;
+        Hitbox hitbox = collider.GetComponent<Hitbox>();
         if (hitbox != null && !hitboxes.Exists(entry => entry.hitbox == hitbox) && hitbox.CanBeHit(this) && !IsTransformExcluded(collider.transform)) {
             Vector3 direction = tr.position - prevPosition;
 
@@ -111,6 +112,7 @@ public class DamageDealer : MonoBehaviour {
                 }
             }
 
+            // Make sure we start the post fixed update coroutine if it's not already running.
             if (coroutineResolveDamage == null) {
                 coroutineResolveDamage = StartCoroutine(ResolveDamage());
             }
@@ -145,10 +147,12 @@ public class DamageDealer : MonoBehaviour {
             }
         }
 
+        //Have the hitbox take damage from us.
         if (bestEntry != null) {
-            bestEntry.hitbox.TakeDamage(damage);
+            bestEntry.hitbox.TakeDamage(this);
         }
 
+        //Clear out the coroutine tracking variable.
         coroutineResolveDamage = null;
     }
 }
