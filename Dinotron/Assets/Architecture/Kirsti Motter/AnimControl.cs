@@ -8,8 +8,7 @@ public class AnimControl : MonoBehaviour {
 
 	private Animator anim;
 	private string currentBool = "isIdle";
-
-    private KeyCode currentKey;
+    
 	private GameCharacter gameCharacter;
 
 	// Use this for initialization
@@ -23,6 +22,7 @@ public class AnimControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        //A lengthy if statement to handle animation states based on character motion.
         if (gameCharacter.jumpInput)
         {
             anim.SetBool("isJumping", true);
@@ -44,6 +44,11 @@ public class AnimControl : MonoBehaviour {
         }
 	}
 
+    /// <summary>
+    /// Switches animation states using the bool parameters in the animator.
+    /// </summary>
+    /// <param name="_whatBool">The animator parameter connected to the animation to be switched to, ie "isWalking".
+    /// This could probably be done better with an enumerator.</param>
 	void SwitchBool(string _whatBool)
 	{
 		anim.SetBool (currentBool, false);
@@ -52,6 +57,10 @@ public class AnimControl : MonoBehaviour {
 		currentBool = _whatBool;
 	}
 
+    /// <summary>
+    /// This prevents continuous jumping. It should not be done this way - if this script carries forward far enough, then scrap this function and rework the jump handling.
+    /// </summary>
+    /// <returns></returns>
 	IEnumerator UncheckJump()
 	{
 		yield return new WaitForSeconds (.1f);
@@ -59,6 +68,9 @@ public class AnimControl : MonoBehaviour {
 		anim.SetBool ("isJumping", false);
 	}
 
+    /// <summary>
+    /// Plays the death animation.
+    /// </summary>
     void PlayDead()
     {
         SwitchBool("isDead");
